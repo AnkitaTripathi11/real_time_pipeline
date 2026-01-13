@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.27.0-standalone-strict/deployment.json
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-consumer
+  template:
+    metadata:
+      labels:
+        app: kafka-consumer
+    spec:
+      containers:
+      - name: kafka-consumer
+        image: <your_docker_repo>/kafka_consumer:latest
+        env:
+        - name: KAFKA_BOOTSTRAP
+          valueFrom:
+            secretKeyRef:
+              name: kafka-secrets
+              key: bootstrap
+        - name: KAFKA_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: kafka-secrets
+              key: username
+        - name: KAFKA_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: kafka-secrets
+              key: password
+        - name: SQL_SERVER
+          valueFrom:
+            secretKeyRef:
+              name: mssql-secrets
+              key: server
+        - name: SQL_DB
+          valueFrom:
+            secretKeyRef:
+              name: mssql-secrets
+              key: db
+        - name: SQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: mssql-secrets
+              key: user
+        - name: SQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mssql-secrets
+              key: password

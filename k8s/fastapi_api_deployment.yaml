@@ -1,0 +1,41 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.27.0-standalone-strict/deployment.json
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapi-api
+  template:
+    metadata:
+      labels:
+        app: fastapi-api
+    spec:
+      containers:
+      - name: fastapi-api
+        image: <your_docker_repo>/fastapi_api:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: SQL_SERVER
+          valueFrom:
+            secretKeyRef:
+              name: mssql-secrets
+              key: server
+        - name: SQL_DB
+          valueFrom:
+            secretKeyRef:
+              name: mssql-secrets
+              key: db
+        - name: SQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: mssql-secrets
+              key: user
+        - name: SQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mssql-secrets
+              key: password
