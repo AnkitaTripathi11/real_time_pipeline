@@ -1,0 +1,5 @@
+# Ignore environment and temporary files
+.env
+*.pyc
+__pycache__/
+*.log
