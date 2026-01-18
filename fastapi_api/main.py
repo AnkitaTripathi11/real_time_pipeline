@@ -6,13 +6,13 @@ from pydantic import BaseModel
 
 #Load environment variables
 load_dotenv()
-SQL_SERVER   = os.getenv("SQL_SERVER")
-SQL_DB       = os.getenv("SQL_DB")
-SQL_USER     = os.getenv("SQL_USER")
-SQL_PASSWORD = os.getenv("SQL_PASSWORD")
+SQL_SERVER=os.getenv("SQL_SERVER")
+SQL_DB=os.getenv("SQL_DB")
+SQL_USER=os.getenv("SQL_USER")
+SQL_PASSWORD=os.getenv("SQL_PASSWORD")
 
 #FastAPI app setup
-app = FastAPI(
+app=FastAPI(
     title="Real-Time Transactions API",
     description="APIs to fetch transaction data and top merchants",
     version="1.0"
@@ -21,7 +21,7 @@ app = FastAPI(
 # Database connection function
 def get_connection():
     try:
-        conn = pyodbc.connect(
+        conn=pyodbc.connect(
             "Driver={ODBC Driver 18 for SQL Server};"
             f"Server={SQL_SERVER};Database={SQL_DB};UID={SQL_USER};PWD={SQL_PASSWORD};"
             "Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
@@ -108,13 +108,13 @@ def get_transaction(transaction_id: str):
 # Endpoint 2: Get top merchants by total transaction volume
 @app.get("/merchants/top", response_model=List[TopMerchantResponse])
 def get_top_merchants(
-    start_date: str = Query(..., description="Start date in YYYY-MM-DD format"),
-    end_date: str = Query(..., description="End date in YYYY-MM-DD format")
+    start_date: str=Query(..., description="Start date in YYYY-MM-DD format"),
+    end_date: str=Query(..., description="End date in YYYY-MM-DD format")
 ):
-    conn = get_connection()
+    conn=get_connection()
     cursor=conn.cursor()
 
-    query = """
+    query="""
         SELECT TOP 5
             m.merchant_id, m.name, m.country,
             SUM(t.amount) AS total_amount
@@ -126,7 +126,7 @@ def get_top_merchants(
     """
 
     cursor.execute(query, start_date, end_date)
-    rows = cursor.fetchall()
+    rows=cursor.fetchall()
 
     if not rows:
         raise HTTPException(status_code=404, detail="No transactions found in this range")
